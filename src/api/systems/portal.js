@@ -5,7 +5,7 @@ import { isUndefined } from "@qingbing/helper";
 
 // 请求头 header
 const headers = {
-  [CONF.systemHeaderKey]: CONF.systems.portal,
+  [CONF.systemHeaderKey]: "portal",
 };
 
 /**

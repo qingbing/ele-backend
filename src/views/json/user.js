@@ -46,7 +46,7 @@ export default {
   },
   phone: {
     input_type: "input-text",
-    field: "mobile",
+    field: "phone",
     default: "",
     label: "座机号",
     rules: [{ type: "phone" }],
