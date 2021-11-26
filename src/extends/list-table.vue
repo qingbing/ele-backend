@@ -211,7 +211,7 @@ export default {
   },
   components: {
     CTable: () => import("@qingbing/element-table"),
-    CQueryForm: () => import("@/components/query-form"),
+    CQueryForm: () => import("@/components/queryForm"),
     CButtons: () => import("@/components/formButton"),
   },
   methods: {

@@ -1,7 +1,7 @@
 <script>
 // 导入包
 import EListTable from "@/extends/list-table.vue";
-import { getHeaderOptions, getFormOptions } from "@/api/pub";
+import { getHeaderOptions, getFormOptions } from "@/api/public";
 import Labels from "@/conf/labels";
 import { merge, copy, asyncAll } from "@qingbing/helper";
 import ReqInterfaces from "@/api/interfaces";

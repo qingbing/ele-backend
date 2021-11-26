@@ -3,7 +3,7 @@ import EForm from "@/extends/form.vue";
 import Router from "@/utils/router-helper";
 import { isEmpty, uniqid, merge, asyncAll } from "@qingbing/helper";
 import ReqForm from "@/api/form";
-import { getFormOptions } from "@/api/pub";
+import { getFormOptions } from "@/api/public";
 
 export default {
   extends: EForm,

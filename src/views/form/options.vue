@@ -2,7 +2,7 @@
 // 导入包
 import EListTable from "@/extends/list-table.vue";
 import { isEmpty, merge, copy } from "@qingbing/helper";
-import { getHeaderOptions } from "@/api/pub";
+import { getHeaderOptions } from "@/api/public";
 import Router from "@/utils/router-helper";
 import ReqForm from "@/api/form";
 import items from "./../json/form";

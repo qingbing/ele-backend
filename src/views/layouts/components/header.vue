@@ -60,7 +60,7 @@
 
 <script>
 // 引入包
-import { clearCache } from "./../../../api/pub";
+import { clearCache } from "../../../api/public";
 import { isArray } from "@qingbing/helper";
 import { success, warning } from "./../../../utils/message";
 

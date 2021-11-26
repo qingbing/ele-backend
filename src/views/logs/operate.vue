@@ -5,7 +5,7 @@ import {
   getHeaderOptions,
   getFormOptions,
   getOptionInterfaceSystems,
-} from "@/api/pub";
+} from "@/api/public";
 import { merge, copy, asyncAll, isArray } from "@qingbing/helper";
 import { getRangeTime } from "@/utils/moment";
 import ReqLogs from "@/api/logs";

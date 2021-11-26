@@ -5,7 +5,7 @@ import {
   getHeaderOptions,
   getFormOptions,
   getOptionInterfaceSystems,
-} from "@/api/pub";
+} from "@/api/public";
 import { merge, copy, asyncAll } from "@qingbing/helper";
 import ReqInterfaces from "@/api/interfaces";
 

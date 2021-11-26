@@ -6,7 +6,7 @@ import {
   getFormOptions,
   getOptionInterfaceSystems,
   getOptionInterfaceTypes,
-} from "@/api/pub";
+} from "@/api/public";
 import {
   merge,
   copy,

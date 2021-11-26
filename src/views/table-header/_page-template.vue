@@ -97,7 +97,7 @@ export default {
   extends: EPage,
   components: {
     CTable: () => import("@qingbing/element-table"),
-    CQueryForm: () => import("@/components/query-form"),
+    CQueryForm: () => import("@/components/queryForm"),
     CButtons: () => import("./../../components/formButton"),
     // 在自组件需要使用的组件，全部小写
     operate: () => import("./../../components/operate"),
