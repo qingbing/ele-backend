@@ -12,7 +12,7 @@ export function getInfo() {
  * 获取登录用户信息
  */
 export function getMenus() {
-  return Axios("/personal/menus");
+  return Axios("/personal/menu");
 }
 
 /**
