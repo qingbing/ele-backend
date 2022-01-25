@@ -1,4 +1,4 @@
-<template>
+@<template>
   <div>
     <el-form
       ref="form"
@@ -29,7 +29,7 @@
 
 <script>
 // 导入
-import { resetPassword } from "../../api/personal";
+import { resetPassword } from "../../api/portal/personal";
 import { success, warning } from "../../utils/message";
 import { col_cloumn } from "@qingbing/helper";
 

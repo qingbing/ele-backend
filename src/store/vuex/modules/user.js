@@ -1,7 +1,7 @@
 // 引入包
-import { setLoginFlag, removeLoginFlag } from "./../../../auth";
-import { login, logout } from "./../../../api/login";
-import { getInfo, getMenus } from "./../../../api/personal";
+import { setLoginFlag, removeLoginFlag } from "@/auth";
+import { login, logout } from "@/api/portal/login";
+import { getInfo, getMenus } from "@/api/portal/personal";
 import { isArray, merge } from "@qingbing/helper";
 
 /**

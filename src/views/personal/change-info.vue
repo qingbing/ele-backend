@@ -30,7 +30,7 @@
 <script>
 // 导入
 import items from "./../json/user";
-import { changeInfo } from "../../api/personal";
+import { changeInfo } from "../../api/portal/personal";
 import { success } from "../../utils/message";
 
 // 导出
