@@ -1,5 +1,5 @@
 // 导入axios请求模块
-import Axios from "./systems/portal";
+import Axios from "./_base";
 
 /**
  * 确认当前客户端是否登录

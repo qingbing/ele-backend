@@ -29,8 +29,8 @@
 
 <script>
 // 导入包
-import { getSupportTypes } from "./../../api/login";
-import { success } from "./../../utils/message";
+import { getSupportTypes } from "@/api/portal/login";
+import { success } from "@/utils/message";
 
 // 导出
 export default {
@@ -97,6 +97,7 @@ export default {
   },
   methods: {
     getOtherQuery(query) {
+      // 未登录直接输入别的界面时，这里记录登录成功后需要跳转的界面
       return Object.keys(query).reduce((acc, cur) => {
         if (cur !== "redirect") {
           acc[cur] = query[cur];

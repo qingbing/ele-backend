@@ -3,7 +3,7 @@ import CONF from "./conf/constant";
 import store from "./store/vuex/index";
 import { asyncRequest } from "./utils/response";
 import { cookie } from "@qingbing/helper";
-import { isLogin } from "./api/login";
+import { isLogin } from "./api/portal/login";
 
 // 变量声明
 const checkKey = CONF.loginCheckKey;
