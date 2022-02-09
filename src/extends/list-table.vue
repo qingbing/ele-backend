@@ -1,15 +1,16 @@
 <template>
   <div>
+    <!-- page-title -->
     <h4 class="page-title" v-if="pageTitle">{{ pageTitle }}</h4>
-    <!-- query from -->
+    <!-- query-from -->
     <el-form
       class="query-form"
       :inline="true"
-      :model="query.search"
+      :model="query.searchFields"
       :ref="query.formRef"
     >
       <c-query-form
-        :query="query.search"
+        :query="query.searchFields"
         :items="query.searchItems"
       ></c-query-form>
       <el-form-item>
@@ -19,7 +20,7 @@
         ></c-buttons>
       </el-form-item>
     </el-form>
-    <!-- list table -->
+    <!-- list-table -->
     <c-table
       ref="pageTable"
       :getHeaders="getHeaders"
@@ -28,102 +29,73 @@
       :pagination="pagination"
       :editConfig="tableEditConfig"
     ></c-table>
-    <!-- add -->
+    <!-- add dialog -->
     <el-dialog
       width="600px"
-      :title="addDailog.title"
-      :visible.sync="addDailog.visible"
+      :title="addDialog.title"
+      :visible.sync="addDialog.visible"
       append-to-body
     >
       <el-form
         label-width="100px"
         label-position="right"
         style="width: 500px"
-        :rules="addDailog.rules"
-        :model="addDailog.entity"
-        :ref="addDailog.formRef"
+        :rules="addDialog.rules"
+        :model="addDialog.entity"
+        :ref="addDialog.formRef"
       >
         <element-form
-          :formData="addDailog.entity"
-          :items="addDailog.items"
-          :rules="addDailog.rules"
-          :viewFields="addDailog.viewFields"
-          :textFields="addDailog.textFields"
+          :formData="addDialog.entity"
+          :items="addDialog.items"
+          :rules="addDialog.rules"
+          :viewFields="addDialog.viewFields"
+          :textFields="addDialog.textFields"
         ></element-form>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <!-- dailog 操作按钮 -->
+        <!-- dialog 操作按钮 -->
         <c-buttons
-          :refForm="addDailog.formRef"
-          :buttons="addDailog.buttons"
+          :refForm="addDialog.formRef"
+          :buttons="addDialog.buttons"
           :submitCallback="handleAdd"
           :cancelCallback="handleCancel"
         ></c-buttons>
       </div>
     </el-dialog>
-    <!-- edit -->
+    <!-- other-dialog -->
     <el-dialog
+      v-for="(dialogData, key) in dialogs"
+      :key="key"
       width="600px"
-      :title="editDailog.title"
-      :visible.sync="editDailog.visible"
+      :title="dialogData.title"
+      :visible.sync="dialogData.visible"
       append-to-body
     >
       <el-form
         label-width="100px"
         label-position="right"
         style="width: 500px"
-        :rules="editDailog.rules"
-        :model="editDailog.entity"
-        :ref="editDailog.formRef"
+        :rules="dialogData.rules"
+        :model="dialogData.entity"
+        :ref="dialogData.formRef ? dialogData.formRef : key"
       >
         <element-form
-          :formData="editDailog.entity"
-          :items="editDailog.items"
-          :rules="editDailog.rules"
-          :viewFields="editDailog.viewFields"
-          :textFields="editDailog.textFields"
+          :formData="dialogData.entity"
+          :items="dialogData.items"
+          :rules="dialogData.rules"
+          :viewFields="dialogData.viewFields"
+          :textFields="dialogData.textFields"
         ></element-form>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <!-- dailog 操作按钮 -->
+        <!-- dialog 操作按钮 -->
         <c-buttons
-          :refForm="editDailog.formRef"
-          :buttons="editDailog.buttons"
-          :submitCallback="handleEdit"
-          :cancelCallback="handleCancel"
-        ></c-buttons>
-      </div>
-    </el-dialog>
-    <!-- view -->
-    <el-dialog
-      width="600px"
-      :title="viewDailog.title"
-      :visible.sync="viewDailog.visible"
-      append-to-body
-    >
-      <el-form
-        label-width="100px"
-        label-position="right"
-        style="width: 500px"
-        :rules="viewDailog.rules"
-        :model="viewDailog.entity"
-        :ref="viewDailog.formRef"
-      >
-        <element-form
-          :formData="viewDailog.entity"
-          :items="viewDailog.items"
-          :rules="viewDailog.rules"
-          :viewFields="viewDailog.viewFields"
-          :textFields="viewDailog.textFields"
-          :isForm="false"
-        ></element-form>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <!-- dailog 操作按钮 -->
-        <c-buttons
-          :refForm="viewDailog.formRef"
-          :buttons="viewDailog.buttons"
-          :cancelCallback="handleCancel"
+          :refForm="dialogData.formRef ? dialogData.formRef : key"
+          :buttons="dialogData.buttons"
+          :submitCallback="dialogData.handleSubmit"
+          :cancelCallback="
+            dialogData.handleCancel ? dialogData.handleCancel : handleCancel
+          "
         ></c-buttons>
       </div>
     </el-dialog>
@@ -133,24 +105,29 @@
 <script>
 // 导入包
 import EBase from "./base";
-import { copy } from "@qingbing/helper";
 import Helper from "@/utils/helper";
+import { copy } from "@qingbing/helper";
 
-// 导入包
+// 导出
 export default {
   extends: EBase,
+  components: {
+    CTable: () => import("@qingbing/element-table"),
+    CQueryForm: () => import("@/components/queryForm"),
+    CButtons: () => import("@/components/formButton"),
+  },
   data() {
     return {
+      /**
+       * page-title
+       */
       pageTitle: "",
-      // 配置表格编辑
-      tableEditConfig: {
-        editable: false,
-        saveHandle: this.cellSave,
-      },
-      // 查询栏目配置
+      /**
+       * query-form
+       */
       query: {
         formRef: "query-form",
-        search: {}, // 默认参数
+        searchFields: {}, // 默认参数
         searchItems: {}, // 项目
         buttons: [
           {
@@ -158,7 +135,7 @@ export default {
             type: "primary",
             callback: this.buttonQuery,
           },
-          "reset",
+          "reset", // 使用vue默认的表单重置
           {
             label: this.getAddButtonText(),
             type: "warning",
@@ -166,120 +143,119 @@ export default {
           },
         ],
       },
-      // 操作的 dailog
-      addDailog: {
-        formRef: "add-dailog-form",
-        title: "", // dailog 标题
-        visible: false, // 是否打开 dailog
+      /**
+       * list-table
+       */
+      // 编辑表格配置
+      tableEditConfig: {
+        editable: false, // 是否编辑表格[true:是; false:否]
+        saveHandle: this.handleCellSave, // 保存编辑表格内容
+      },
+      // 操作的 dialog
+      addDialog: {
+        formRef: "add-dialog-form",
+        title: "新增数据", // dialog 标题
+        visible: false, // 是否打开 dialog
         entity: {}, // 当前操作实体
-        rules: {}, // 规则，这个定义为数组，不用赋值
+        rules: {}, // 规则，这个定义为对象，不用赋值
         items: {}, // 项目
         viewFields: [], // 需要展示的项目
         textFields: [], // 强制 view
-        buttons: ["submit", "cancel"], // 默认展示按钮
+        buttons: ["submit", "reset", "cancel"], // 默认展示按钮
         // 默认的操作实体，为新增时复制使用
         defaultEntity: {},
       },
-      // 操作的 dailog
-      editDailog: {
-        formRef: "add-dailog-form",
-        title: "", // dailog 标题
-        visible: false, // 是否打开 dailog
-        entity: {}, // 当前操作实体
-        rules: {}, // 规则，这个定义为数组，不用赋值
-        items: {}, // 项目
-        viewFields: [], // 需要展示的项目
-        textFields: [], // 强制 view
-        buttons: ["submit", "cancel"], // 默认展示按钮
-        // 默认的操作实体，为新增时复制使用
-        defaultEntity: {},
-      },
-      // 查看的 dailog
-      viewDailog: {
-        formRef: "view-dailog-form",
-        title: "", // dailog 标题
-        visible: false, // 是否打开 dailog
-        entity: {}, // 当前操作实体
-        rules: {}, // 规则，这个定义为数组，不用赋值
-        items: {}, // 项目
-        viewFields: [], // 需要展示的项目
-        textFields: [], // 强制 view
-        buttons: ["cancel"], // 默认展示按钮
-        defaultEntity: {}, // 默认的操作实体
-      },
+      // other dialog - 如果页面需要其它dialog，需要重载该属性，该属性为键值对象
+      // 对象内容参考上面的 addDialog，针对列表，请勿直接使用reset，默认reset达不到想要的效果，只能自行写方法实现
+      dialogs: {},
     };
   },
-  components: {
-    CTable: () => import("@qingbing/element-table"),
-    CQueryForm: () => import("@/components/queryForm"),
-    CButtons: () => import("@/components/formButton"),
-  },
   methods: {
-    // 添加按钮文字
-    getAddButtonText() {
-      return "添加";
-    },
-    // 列数据渲染前可修改列数据
-    beforeRender(item, idx) {},
-    // 重新加载表格
-    reloadTable() {
-      Helper.reloadTable(this, "pageTable");
-      // this.$refs["pageTable"].refreshTable();
-    },
-    // 页面查询按钮
-    buttonQuery() {
-      this.reloadTable();
-    },
-    // 添加按钮
-    buttonAdd() {
-      // 设置 addDailog 表单数据
-      this.addDailog.entity = copy(this.addDailog.defaultEntity);
-      // 打开 dailog
-      this.openDialog("addDailog");
-    },
-    // 编辑按钮
-    buttonEdit(entity) {
-      // 设置 editDailog 表单数据
-      this.editDailog.entity = copy(entity);
-      // 打开 dailog
-      this.openDialog("editDailog");
-    },
-    // 查看按钮
-    buttonView(entity) {
-      // 设置 viewDailog 表单数据
-      this.viewDailog.entity = copy(entity);
-      // 打开 dailog
-      this.openDialog("viewDailog");
-    },
-    // 关闭 dailog
+    // 关闭 dialog
     handleCancel() {
-      // 关闭 dailog
-      this.closeDialog();
+      this.closeDialog(); // 继承./base
     },
     // 添加或修改的最终提交
-    addOrEditSave(promise, successCb, failureCb) {
+    save(promise, successCb, failureCb) {
       promise
         .then((res) => {
           successCb(res.message);
-          // 关闭 dailog
+          // 关闭 dialog
           this.closeDialog();
           // 刷新列表
           this.reloadTable();
         })
         .catch((res) => failureCb(res.message));
     },
-    ////////////////////////////////////////////
-    // 保存单元格
-    cellSave(cb, change, properties, params) {
-      console.log("cell-save", cb, change, properties, params);
+    // 编辑表单的最终提交
+    cellSave(promise, callback) {
+      promise
+        .then(() => {
+          callback(true);
+          this.reloadTable();
+        })
+        .catch(() => callback(false));
     },
-    // 添加保存
+    // 操作按钮影响列表
+    operateChangeList(promise, successCb, failureCb) {
+      promise
+        .then((res) => {
+          successCb(res.message);
+          // 刷新列表
+          this.reloadTable();
+        })
+        .catch((res) => failureCb(res));
+    },
+    /**
+     * query-form
+     */
+    // covered-level(can): 添加按钮文字
+    getAddButtonText() {
+      return "添加";
+    },
+    // covered-level(no): 新增按钮
+    buttonAdd() {
+      // 设置 addDialog 表单数据
+      this.addDialog.entity = copy(this.addDialog.defaultEntity);
+      // 打开 dialog
+      this.openDialog("addDialog");
+    },
+    /**
+     * list-table
+     */
+    // covered-level(no): 重新加载表格
+    reloadTable() {
+      Helper.reloadTable(this, "pageTable");
+    },
+    // covered-level(no): 页面查询按钮
+    buttonQuery() {
+      this.reloadTable();
+    },
+    // covered-level(can): 列数据渲染前可修改列数据
+    beforeRender(item, idx) {
+      // item.xx = ??;
+    },
+    // covered-level(must) 获取表头
+    getHeaders(callback) {
+      // callback(headers);
+    },
+    // covered-level(must) 获取表格数据
+    getData(callback) {
+      // callback(data);
+    },
+    // covered-level(can): 新增保存
     handleAdd(successCb, failureCb) {
-      console.log(successCb, failureCb);
+      console.log("需要页面重载的方法:handleAdd", successCb, failureCb);
     },
-    // 编辑保存
-    handleEdit(successCb, failureCb) {
-      console.log(successCb, failureCb);
+    // covered-level(can): 保存单元格
+    handleCellSave(callback, change, properties, params) {
+      console.log(
+        "需要页面重载的方法:handleCellSave",
+        callback,
+        change,
+        properties,
+        params
+      );
     },
   },
 };

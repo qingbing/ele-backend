@@ -17,6 +17,7 @@ import {
   isUndefined,
   isEmpty,
   isObject,
+  isArray,
   isFunction,
   dump,
   uniqid,
@@ -26,7 +27,9 @@ export default {
   props: {
     uniqid: {
       type: String,
-      default: uniqid(),
+      default: () => {
+        return uniqid();
+      },
     },
     refForm: {
       type: String,
@@ -139,6 +142,12 @@ export default {
       }
       return this.formParent;
     },
+    getRefForm() {
+      if (isArray(this.getFormParent().$refs[this.refForm])) {
+        return this.getFormParent().$refs[this.refForm][0];
+      }
+      return this.getFormParent().$refs[this.refForm];
+    },
     /**
      * 提交按钮句柄
      */
@@ -150,11 +159,9 @@ export default {
         });
       }
       this.submitLoading = true;
-      if (
-        isFunction(this.submitCallback) &&
-        this.getFormParent().$refs[this.refForm]
-      ) {
-        this.getFormParent().$refs[this.refForm].validate((valid) => {
+      const $refForm = this.getRefForm();
+      if (isFunction(this.submitCallback) && $refForm) {
+        $refForm.validate((valid) => {
           if (!valid) {
             this.submitLoading = false;
             return;
@@ -182,8 +189,9 @@ export default {
      */
     cancelHandle() {
       this.submitLoading = false;
-      if (this.getFormParent().$refs[this.refForm]) {
-        this.getFormParent().$refs[this.refForm].resetFields();
+      const $refForm = this.getRefForm();
+      if ($refForm) {
+        $refForm.resetFields();
       }
       if (isFunction(this.cancelCallback)) {
         return this.cancelCallback.call(this.getFormParent(), this);
@@ -197,7 +205,10 @@ export default {
       if (isFunction(this.resetCallback)) {
         return this.resetCallback.call(this.getFormParent(), this);
       }
-      this.getFormParent().$refs[this.refForm].resetFields();
+      const $refForm = this.getRefForm();
+      if ($refForm) {
+        $refForm.resetFields();
+      }
     },
     /**
      * 普通按钮句柄
