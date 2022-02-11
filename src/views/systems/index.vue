@@ -2,7 +2,7 @@
 import { merge, copy } from "@qingbing/helper";
 import ReqSystem from "@/api/portal/systems";
 import EListTable from "@/extends/list-table.vue";
-import JsonData from "./../json/systems";
+import JsonOption from "./../json/systems";
 
 // 导入包
 export default {
@@ -31,7 +31,7 @@ export default {
     };
     return {
       query: {
-        searchItems: JsonData.searchItems,
+        searchItems: JsonOption.searchItems,
         searchFields: {
           code: "",
           name: "",
@@ -62,7 +62,6 @@ export default {
         ],
       },
       addDialog: {
-        title: "添加系统",
         defaultEntity: copy(defaultEntity),
         viewFields: [
           "code",
@@ -89,8 +88,9 @@ export default {
           rules: {}, // 规则，这个定义为数组，不用赋值
           items: {}, // 项目
           viewFields: [], // 需要展示的项目
-          textFields: [], // 强制 view
-          buttons: ["submit", "reset", "cancel"], // 默认展示按钮
+          // 强制 view
+          textFields: ["code", "type", "proxy_id"],
+          buttons: ["submit", "cancel"], // 默认展示按钮
           handleSubmit: this.handleEdit,
         },
         view: {
@@ -142,7 +142,7 @@ export default {
     // covered-level(must) 获取表头
     getHeaders(callback) {
       // 表头item
-      const headers = JsonData.tableHeaders;
+      const headers = JsonOption.tableHeaders;
       // 操作
       headers.operate.params = {
         buttons: [
@@ -154,7 +154,7 @@ export default {
       callback(headers);
 
       // 表单选项
-      const items = JsonData.formOptions;
+      const items = JsonOption.formOptions;
       this.addDialog.items = copy(items);
       this.dialogs.edit.items = copy(items);
       this.dialogs.view.items = copy(items);

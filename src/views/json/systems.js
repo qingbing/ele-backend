@@ -1,6 +1,6 @@
 // 导入
 import Labels from "@/conf/labels";
-// 用户字段
+// 选项-系统管理
 export default {
   searchItems: {
     code: {
