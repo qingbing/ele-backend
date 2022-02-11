@@ -80,22 +80,9 @@ export default {
         ],
       },
       dialogs: {
-        edit: {
-          formRef: "edit-dialog-form",
-          title: "修改系统", // dialog 标题
-          visible: false, // 是否打开 dialog
-          entity: {}, // 当前操作实体
-          rules: {}, // 规则，这个定义为数组，不用赋值
-          items: {}, // 项目
-          viewFields: [], // 需要展示的项目
-          // 强制 view
-          textFields: ["code", "type", "proxy_id"],
-          buttons: ["submit", "cancel"], // 默认展示按钮
-          handleSubmit: this.handleEdit,
-        },
         view: {
           formRef: "view-dialog-form",
-          title: "", // dialog 标题
+          title: "查看系统", // dialog 标题
           visible: false, // 是否打开 dialog
           entity: {}, // 当前操作实体
           rules: {}, // 规则，这个定义为数组，不用赋值
@@ -118,6 +105,19 @@ export default {
             "ext",
           ],
           buttons: ["cancel"],
+        },
+        edit: {
+          formRef: "edit-dialog-form",
+          title: "编辑系统", // dialog 标题
+          visible: false, // 是否打开 dialog
+          entity: {}, // 当前操作实体
+          rules: {}, // 规则，这个定义为数组，不用赋值
+          items: {}, // 项目
+          viewFields: [], // 需要展示的项目
+          // 强制 view
+          textFields: ["code", "type", "proxy_id"],
+          buttons: ["submit", "cancel"], // 默认展示按钮
+          handleSubmit: this.handleEdit,
         },
       },
     };
