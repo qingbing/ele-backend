@@ -98,13 +98,6 @@ export default {
         failureCb
       );
     },
-    // covered-level(can): 保存单元格
-    handleCellSave(callback, change, properties, params) {
-      this.cellSave(
-        ReqHeader.headerEdit(merge(change, { id: properties.id })),
-        callback
-      );
-    },
     /**
      * list-operate
      */
