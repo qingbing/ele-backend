@@ -28,4 +28,12 @@ export default {
     0: "正常",
     1: "已删除",
   },
+  business: {
+    // 系统类型
+    systemTypes: {
+      inner: "当前系统",
+      transfer: "转发系统",
+      outer: "外部系统",
+    },
+  },
 };
