@@ -56,19 +56,29 @@ export default {
       if (isUndefined(item.label)) {
         switch (item.dataType) {
           case "sex":
-            item.label = "性别";
+            if (isUndefined(item.label)) {
+              item.label = "性别";
+            }
             break;
           case "yesNo":
-            item.label = "是否选择";
+            if (isUndefined(item.label)) {
+              item.label = "是否选择";
+            }
             break;
           case "forbidden":
-            item.label = "禁用状态";
+            if (isUndefined(item.label)) {
+              item.label = "禁用状态";
+            }
             break;
           case "enable":
-            item.label = "开启状态";
+            if (isUndefined(item.label)) {
+              item.label = "启用状态";
+            }
             break;
           case "deleted":
-            item.label = "删除状态";
+            if (isUndefined(item.label)) {
+              item.label = "删除状态";
+            }
             break;
         }
       }
