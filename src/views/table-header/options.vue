@@ -1,6 +1,6 @@
 <script>
 import { isEmpty, merge, copy } from "@qingbing/helper";
-import ReqHeader from "@/api/configure/header";
+import ReqHeader from "@/api/configure/table-header";
 import Router from "@/utils/router-helper";
 import JsonOption from "./../json/tableHeader-options";
 import EListTable from "@/extends/list-table.vue";
