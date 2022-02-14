@@ -101,14 +101,14 @@ export default {
     /**
      * list-operate
      */
-    // 查看按钮
+    // table-list 查看按钮
     buttonView(entity) {
       // 设置 viewDialog 表单数据
       this.dialogs.view.entity = copy(entity);
       // 打开 dialog
       this.openDialog(this.dialogs.view);
     },
-    // 编辑按钮
+    // table-list 编辑按钮
     buttonEdit(entity) {
       // 设置 viewDialog 表单数据
       this.dialogs.edit.entity = copy(entity);
@@ -126,7 +126,7 @@ export default {
         failureCb
       );
     },
-    // list-dialog 删除执行
+    // table-list 删除执行
     handleDelete(entity, successCb, failureCb) {
       this.operateChangeList(ReqHeader.headerDel(entity), successCb, failureCb);
     },

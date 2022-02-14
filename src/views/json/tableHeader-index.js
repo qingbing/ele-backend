@@ -1,4 +1,4 @@
-// 选项-表单类型管理
+// 选项-表头类型管理
 export default {
   searchItems: {
     key: {
