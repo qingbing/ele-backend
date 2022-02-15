@@ -60,7 +60,7 @@ export default {
     },
     // 保存结果
     handleSave(successCb, failureCb) {
-      console.log("save");
+      console.log("handleSave", successCb, failureCb);
     },
   },
 };
