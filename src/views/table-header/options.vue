@@ -152,13 +152,13 @@ export default {
     };
   },
   methods: {
-    init(headerKey) {
-      if (isEmpty(headerKey)) {
+    init(key) {
+      if (isEmpty(key)) {
         Router.error404(this);
         return;
       }
       // 获取表头详情
-      ReqHeader.headerView({ key: headerKey })
+      ReqHeader.headerView({ key: key })
         .then((res) => {
           this.header = res.data;
           this.pageTitle = `表头选项【${this.header.key}(${this.header.name})】`;

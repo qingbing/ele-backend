@@ -1,6 +1,4 @@
-// 导入
-import Labels from "./../../conf/labels";
-
+// 定义输出类型变量
 const inputTypes = {
   "view-text": "显示",
   "input-text": "文本框",
@@ -23,47 +21,96 @@ const inputTypes = {
   "vue-editor": "富文本编辑",
 };
 
-// 用户字段
+// 选项-表头类型管理
 export default {
-  category: {
-    key: {
-      input_type: "input-text",
-      label: "表单标识",
-      rules: [{ type: "required" }],
+  tableHeaders: {
+    _idx: {
+      field: "_idx",
+      label: "序号",
+      default: "",
+      width: "50",
+      fixed: "left",
     },
-    name: {
-      input_type: "input-text",
-      label: "表单名称",
-      rules: [{ type: "required" }],
+    field: {
+      field: "field",
+      label: "字段",
+      default: "",
+      width: "100",
+      fixed: "left",
+      align: "left",
+      is_tooltip: true,
+    },
+    label: {
+      field: "label",
+      label: "字段名",
+      default: "",
+      width: "150",
+      align: "left",
+      params: {
+        type: "text",
+      },
+      is_tooltip: true,
+      is_editable: true,
+    },
+    input_type: {
+      field: "input_type",
+      label: "表单类型",
+      default: "",
+      width: "100",
+      align: "left",
+      options: inputTypes,
     },
     sort_order: {
-      input_type: "input-number",
+      field: "sort_order",
       label: "排序",
-      rules: [{ type: "required" }, { type: "number", min: 0, max: 127 }],
+      default: "",
+      width: "80",
+      params: {
+        type: "text",
+      },
+      is_editable: true,
     },
-    is_open: {
-      input_type: "ele-switch",
-      label: "是否公开",
+    default: {
+      field: "default",
+      label: "默认值",
+      default: "",
+      width: "100",
+      params: {
+        type: "text",
+      },
+      is_editable: true,
+    },
+    is_required: {
+      field: "is_required",
+      label: "必填",
+      default: "",
+      width: "80",
+      params: {
+        type: "switch",
+      },
+      is_editable: true,
     },
     is_enable: {
-      input_type: "ele-switch",
-      label: "启用状态",
-    },
-    is_setting: {
-      input_type: "input-select",
-      label: "配置表单",
-      exts: {
-        options: Labels.yesNo,
+      field: "is_enable",
+      label: "是否开启",
+      default: "",
+      width: "80",
+      params: {
+        type: "switch",
       },
-      rules: [{ type: "required" }, { type: "enum" }],
+      is_editable: true,
     },
-    description: {
-      input_type: "input-area",
-      label: "描述",
-      rules: [],
+    operate: {
+      field: "operate",
+      label: "操作",
+      default: "",
+      width: "260",
+      fixed: "right",
+      align: "left",
+      component: "operate",
     },
   },
-  options: {
+  formOptions: {
     id: {
       input_type: "view-text",
       label: "自增ID",
