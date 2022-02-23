@@ -1,14 +1,13 @@
 <script>
 // 导入包
-import EListTable from "@/extends/list-table.vue";
-import {
-  getHeaderOptions,
-  getFormOptions,
-  getOptionInterfaceSystems,
-} from "@/api/public";
-import { merge, copy, asyncAll, isArray } from "@qingbing/helper";
+import { merge, copy, isArray } from "@qingbing/helper";
+import Cache from "@/utils/cache";
 import { getRangeTime } from "@/utils/moment";
-import ReqLogs from "@/api/logs";
+import EListTable from "@/extends/list-table.vue";
+import JsonOption from "./../json/logs-operate";
+import { getHeaderOptions, getFormOptions } from "@/api/configure/public";
+import { getOptionForSystems } from "@/api/portal/public";
+import ReqLogs from "@/api/portal/logs";
 
 // 导入包
 export default {
@@ -17,65 +16,22 @@ export default {
     // 在自组件需要使用的组件，全部小写
     operate: () => import("@/components/operate"),
   },
+  created() {},
   data() {
     return {
       query: {
-        search: {
+        searchItems: JsonOption.searchItems,
+        searchFields: {
           queryTime: getRangeTime(-7),
-          system_alias: "",
+          system_code: "",
           id: "",
           trace_id: "",
           type: "",
           keyword: "",
           ip: "",
+          nickname: "",
           uid: "",
           message: "",
-        },
-        searchItems: {
-          queryTime: {
-            input_type: "date-picker",
-            label: "接口创建时间",
-            exts: {
-              type: "datetimerange",
-              clearable: false,
-            },
-          },
-          system_alias: {
-            input_type: "input-select",
-            label: "所属系统",
-            exts: {
-              clearable: true,
-              options: {},
-            },
-          },
-          id: {
-            input_type: "input-text",
-            label: "日志ID",
-          },
-          trace_id: {
-            input_type: "input-text",
-            label: "Trace-ID",
-          },
-          type: {
-            input_type: "input-text",
-            label: "操作类型",
-          },
-          keyword: {
-            input_type: "input-text",
-            label: "关键字",
-          },
-          ip: {
-            input_type: "input-text",
-            label: "访问IP",
-          },
-          uid: {
-            input_type: "input-text",
-            label: "UID",
-          },
-          message: {
-            input_type: "input-text",
-            label: "日志消息",
-          },
         },
         buttons: [
           {
@@ -86,57 +42,81 @@ export default {
           "reset",
         ],
       },
-      viewDailog: {
-        title: "查看操作日志",
-        buttons: ["cancel"],
-        defaultEntity: {},
+      dialogs: {
+        view: {
+          formRef: "view-dialog-form",
+          title: "查看操作日志", // dialog 标题
+          visible: false, // 是否打开 dialog
+          entity: {}, // 当前操作实体
+          rules: {}, // 规则，这个定义为数组，不用赋值
+          items: {}, // 项目
+          viewFields: [], // 需要展示的项目
+          // 强制 view
+          textFields: ["system_code", "data"],
+          buttons: ["cancel"],
+        },
       },
     };
   },
+  methods: {
+    // covered-level(must) 获取表头
+    async getHeaders(callback) {
+      const pageKey = "program-logs-operate";
+      const res = await Cache.get(
+        `local.${pageKey}`,
+        () => {
+          return {
+            tableHeaders: getHeaderOptions(pageKey),
+            formOptions: getFormOptions(pageKey),
+            systems: getOptionForSystems(),
+          };
+        },
+        7200
+      );
+      // 表头item
+      const headers = res.tableHeaders;
+      // 操作
+      headers.operate.params = {
+        buttons: [{ operType: "view", handle: this.buttonView }],
+      };
+      callback(headers);
+      // 查询条件
+      this.query.searchItems.system_code.exts.options = res.systems;
+      // 表单选项
+      const items = res.formOptions;
+      items.system_code.exts = {
+        options: res.systems,
+      };
+      this.dialogs.view.items = copy(items);
+    },
+    // covered-level(must) 获取表格数据
+    getData(callback) {
+      ReqLogs.operateLogList(merge(this.query.searchFields, this.pagination))
+        .then((res) => callback(res.data))
+        .catch(() => {});
+    },
+    /**
+     * list-operate
+     */
+    // table-list 查看按钮
+    buttonView(entity) {
+      // 设置 viewDialog 表单数据
+      this.dialogs.view.entity = copy(entity);
+      // 打开 dialog
+      this.openDialog(this.dialogs.view);
+    },
+  },
   watch: {
     // 查询时间监听
-    "query.search.queryTime": {
+    "query.searchFields.queryTime": {
       handler: function (val) {
         if (!isArray(val)) {
           val = getRangeTime(-7);
         }
-        this.query.search.start_at = val[0];
-        this.query.search.end_at = val[1];
+        this.query.searchFields.start_at = val[0];
+        this.query.searchFields.end_at = val[1];
       },
       immediate: true,
-    },
-  },
-  methods: {
-    getHeaders(cb) {
-      // 获取item，系统
-      const promise = {
-        systems: getOptionInterfaceSystems(),
-        options: getFormOptions("program-logs-operate"),
-        headers: getHeaderOptions("program-logs-operate"),
-      };
-      asyncAll(promise, (res) => {
-        const headers = res.headers;
-        // 系统
-        headers.system_alias.options = res.systems;
-        // 列表操作
-        headers.operate.params = {
-          buttons: [{ operType: "view", handle: this.buttonView }],
-        };
-        cb(headers);
-        // 查询条件
-        this.query.searchItems.system_alias.exts.options = res.systems;
-        // 表单选项
-        const items = res.options;
-        items.system_alias.exts = {
-          options: res.systems,
-        };
-        this.viewDailog.items = copy(items);
-      });
-    },
-    getData(cb) {
-      ReqLogs.operateLogList(merge(this.query.search, this.pagination))
-        .then((res) => cb(res.data))
-        .catch(() => {});
     },
   },
 };

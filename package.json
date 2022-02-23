@@ -11,7 +11,7 @@
     "@qingbing/element-cell-edit": "^1.0.5",
     "@qingbing/element-form": "^1.0.20",
     "@qingbing/element-table": "^1.0.6",
-    "@qingbing/helper": "^1.0.14",
+    "@qingbing/helper": "^1.0.15",
     "@qingbing/vue-highlight": "^1.0.3",
     "@qingbing/vue-markdown": "^1.0.2",
     "axios": "^0.21.1",

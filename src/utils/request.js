@@ -51,7 +51,7 @@ request.interceptors.response.use(
     if (response.request.responseType === "blob") {
       return response;
     }
-    return parseResult(response.data);
+    return parseResult(response.data, true);
   },
   (err) => {
     loading.close();
