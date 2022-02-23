@@ -1,8 +1,8 @@
 <script>
 import { merge, copy } from "@qingbing/helper";
-import ReqSystem from "@/api/portal/systems";
 import EListTable from "@/extends/list-table.vue";
 import JsonOption from "./../json/systems";
+import ReqSystem from "@/api/portal/systems";
 
 // 导入包
 export default {

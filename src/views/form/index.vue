@@ -1,9 +1,9 @@
 <script>
 import { merge, copy } from "@qingbing/helper";
-import ReqForm from "@/api/configure/form";
+import EListTable from "@/extends/list-table.vue";
 import Router from "@/utils/router-helper";
 import JsonOption from "./../json/form-index";
-import EListTable from "@/extends/list-table.vue";
+import ReqForm from "@/api/configure/form";
 
 // 导入包
 export default {

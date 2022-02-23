@@ -1,9 +1,9 @@
 <script>
+import { isEmpty, uniqid, merge, asyncAll } from "@qingbing/helper";
 import EForm from "@/extends/form.vue";
 import Router from "@/utils/router-helper";
-import { isEmpty, uniqid, merge, asyncAll } from "@qingbing/helper";
-import ReqForm from "@/api/configure/form";
 import { getFormOptions } from "@/api/configure/public";
+import ReqForm from "@/api/configure/form";
 
 export default {
   extends: EForm,
