@@ -55,7 +55,7 @@ export default {
           rules: {}, // 规则，这个定义为数组，不用赋值
           items: {}, // 项目
           viewFields: [], // 需要展示的项目
-          textFields: [], // 强制 view
+          textFields: ["key"], // 强制 view
           buttons: ["submit", "cancel"], // 默认展示按钮
           handleSubmit: this.handleEdit,
         },

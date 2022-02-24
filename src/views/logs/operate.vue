@@ -61,9 +61,9 @@ export default {
   methods: {
     // covered-level(must) 获取表头
     async getHeaders(callback) {
-      const pageKey = "program-logs-operate";
+      const pageKey = "backend-logs-operate";
       const res = await Cache.get(
-        `local.${pageKey}`,
+        Cache.getPageStaticDataKey(pageKey),
         () => {
           return {
             tableHeaders: getHeaderOptions(pageKey),
