@@ -21,13 +21,13 @@ export default [
         meta: { title: "操作提示日志" },
       },
       {
-        path: "interface-route",
-        component: () => import("../../views/logs/interface-route.vue"),
+        path: "route",
+        component: () => import("../../views/logs/route.vue"),
         meta: { title: "接口路由日志" },
       },
       {
-        path: "interface-access",
-        component: () => import("../../views/logs/interface-access.vue"),
+        path: "access",
+        component: () => import("../../views/logs/access.vue"),
         meta: { title: "接口访问日志" },
       },
     ],
