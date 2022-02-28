@@ -15,8 +15,7 @@ export default {
   },
   created() {},
   data() {
-    // let isSuper = !!this.$store.getters.userInfo.is_super;
-    let isSuper = true;
+    let isSuper = !!this.$store.getters.userInfo.is_super;
     const defaultEntity = {
       code: "",
       name: "",
@@ -52,6 +51,7 @@ export default {
       replace_fields: "replace_fields",
     };
     if (isSuper) {
+      // 超管有添加按钮
       buttons.push({
         label: this.getAddButtonText(),
         type: "warning",
@@ -161,7 +161,12 @@ export default {
       // 操作
       const listButtons = [{ operType: "view", handle: this.buttonView }];
       if (this.isSuper) {
+        // 超管展示编辑
         listButtons.push({ operType: "edit", handle: this.buttonEdit });
+      } else {
+        // 非超管不展示 code、is_open
+        delete headers.code;
+        delete headers.is_open;
       }
       listButtons.push({
         label: "设置模版",
