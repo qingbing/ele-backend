@@ -2,17 +2,15 @@
 import Axios from "./_base";
 
 /**
- * todo
  * 获取表头输入选项
  */
-export function getHeaderOptions(headerKey) {
+export function getHeaderOptions(key) {
   return Axios("/backend/public/header-options", {
-    key: headerKey,
+    key: key,
   });
 }
 
 /**
- * todo
  * 获取表单输入选项
  */
 export function getFormOptions(key) {
