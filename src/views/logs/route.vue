@@ -56,15 +56,15 @@ export default {
           buttons: ["cancel"],
         },
       },
+      // covered-level(can): 列数据渲染前可修改列数据
+      beforeRender(item, idx) {
+        item.input = toJson(item.input);
+        item.output = toJson(item.output);
+        item.exts = toJson(item.exts);
+      },
     };
   },
   methods: {
-    // covered-level(can): 列数据渲染前可修改列数据
-    beforeRender(item, idx) {
-      item.input = toJson(item.input);
-      item.output = toJson(item.output);
-      item.exts = toJson(item.exts);
-    },
     // covered-level(must) 获取表头
     async getHeaders(callback) {
       const pageKey = "backend-logs-route";

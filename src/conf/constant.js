@@ -8,6 +8,12 @@ export default {
   loginCheckKey: "X-LOGIN-CHECK-TIME", // 登录cookie标记
   menuCollaspeKey: "MENU-COLLASPE", // 菜单
   cacheExpireKeyForPageStaticData: "XZ-", // 静态数据缓存key前缀
+  treeMenuTypes: {
+    menu: "菜单",
+    help: "帮助中心",
+    top: "顶端菜单",
+    footer: "底部菜单",
+  },
   // // 七牛云配置
   // qiniuUpload: "http://up-z1.qiniup.com/",
   // qiniuPrefix: "http://qiniu.phpcorner.net/"

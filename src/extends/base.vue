@@ -1,6 +1,7 @@
 <script>
 // 导入包
 import { isUndefined, isArray, isObject, dump } from "@qingbing/helper";
+import { success, warning, info, error } from "@/utils/message";
 // 导出组件
 export default {
   data() {
@@ -55,6 +56,26 @@ export default {
         this.openedDialog.visible = false;
         this.openedDialog = undefined;
       }
+    },
+    // 取消 按钮关闭dialog
+    handleCancel() {
+      this.closeDialog();
+    },
+    // 成功提示
+    successTip(message) {
+      return success(message);
+    },
+    // 警告提示
+    warningTip(message) {
+      return warning(message);
+    },
+    // 信息提示
+    infoTip(message) {
+      return info(message);
+    },
+    // 错误提示
+    errorTip(message) {
+      return error(message);
     },
   },
 };

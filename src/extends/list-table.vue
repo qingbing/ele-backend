@@ -168,6 +168,8 @@ export default {
       // other dialog - 如果页面需要其它dialog，需要重载该属性，该属性为键值对象
       // 对象内容参考上面的 addDialog，针对列表，请勿直接使用reset，默认reset达不到想要的效果，只能自行写方法实现
       dialogs: {},
+      // covered-level(can): 列数据渲染前可修改列数据
+      beforeRender: null,
     };
   },
   methods: {
@@ -230,10 +232,6 @@ export default {
     // covered-level(no): 页面查询按钮
     buttonQuery() {
       this.reloadTable();
-    },
-    // covered-level(can): 列数据渲染前可修改列数据
-    beforeRender(item, idx) {
-      // item.xx = ??;
     },
     // covered-level(must) 获取表头
     getHeaders(callback) {
