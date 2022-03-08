@@ -43,6 +43,10 @@
               <el-link type="danger"
                 ><i class="el-icon-delete" @click="handleDel(node, data)"></i
               ></el-link>
+              <span> | </span>
+              <el-link type="info"
+                ><i class="el-icon-setting" @click="buttonTransfer(data)"></i
+              ></el-link>
             </span>
           </span>
         </el-tree>
@@ -52,8 +56,8 @@
     <!-- other-dialog -->
     <el-dialog
       v-for="(dialogData, key) in dialogs"
-      :key="key"
       width="600px"
+      :key="key"
       :title="dialogData.title"
       :visible.sync="dialogData.visible"
       append-to-body
@@ -83,6 +87,37 @@
           :cancelCallback="handleCancel"
         ></c-buttons>
       </div>
+    </el-dialog>
+    <!-- dialog for transfer -->
+    <el-dialog
+      width="960px"
+      :close-on-click-modal="transferDialog.modalClose"
+      :title="transferDialog.title"
+      :visible.sync="transferDialog.visible"
+      append-to-body
+    >
+      <el-form
+        width="960px"
+        :model="transferDialog.entity"
+        :ref="transferDialog.formRef"
+      >
+        <el-transfer
+          v-model="transferDialog.codes"
+          filterable
+          :data="transferDialog.list"
+          :filter-method="handleFilterNode"
+          :filter-placeholder="transferDialog.placeholder"
+        >
+        </el-transfer>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <c-buttons
+          :refForm="transferDialog.formRef"
+          :buttons="transferDialog.buttons"
+          :submitCallback="transferDialog.handleSubmit"
+          :cancelCallback="handleCancel"
+        ></c-buttons>
+      </span>
     </el-dialog>
   </div>
 </template>
@@ -237,6 +272,18 @@ export default {
           defaultEntity: {},
         },
       },
+      transferDialog: {
+        placeholder: "请输入关键字", // 搜索提示信息
+        list: [], // 项目列表，页面初始化时加载一次即可
+        entity: {}, // 菜单实体，需要每次打开时重新赋值
+        codes: [], // 选中的项目，需要每次打开时重新赋值
+        modalClose: false,
+        formRef: "transfer-dialog-form",
+        title: "",
+        visible: false,
+        buttons: ["submit", "cancel"], // 默认展示按钮
+        handleSubmit: this.handleAssignApi,
+      },
     };
   },
   methods: {
@@ -272,6 +319,12 @@ export default {
       this.dialogs.add.items = copy(res.formOptions);
       this.dialogs.edit.items = copy(res.formOptions);
       this.dialogs.view.items = copy(res.formOptions);
+      // 准备 transfer 的接口 list
+      ReqPermission.apiAllForTransfer()
+        .then((res) => {
+          this.transferDialog.list = res.data;
+        })
+        .catch((error) => console.log(error));
     },
     // 获取当前tab标签下的可选菜单类型选项
     getMenuTypeOptions() {
@@ -336,6 +389,20 @@ export default {
       // 显示弹出
       this.openDialog(this.dialogs.view);
     },
+    // button 打开接口分配穿梭
+    buttonTransfer(data) {
+      this.transferDialog.title = `分配接口(${data.name})`;
+      this.transferDialog.entity = copy(data);
+      ReqPermission.getAssignedApiPath({
+        code: data.code,
+      })
+        .then((res) => {
+          this.transferDialog.codes = res.data;
+          // 显示弹出
+          this.openDialog(this.transferDialog);
+        })
+        .catch((err) => console.log(err));
+    },
     // 添加处理函数
     handleAdd(successCb, failureCb) {
       ReqPermission.menuAdd(this.dialogs.add.entity)
@@ -386,6 +453,24 @@ export default {
           this.errorTip(res.message);
         });
     },
+    // transfer 过滤搜索
+    handleFilterNode(query, item) {
+      return item.label.indexOf(query) > -1;
+    },
+    // transfer 确定保存处理
+    handleAssignApi() {
+      ReqPermission.assignApiPath({
+        code: this.transferDialog.entity.code,
+        api_codes: this.transferDialog.codes,
+      })
+        .then((res) => {
+          this.successTip(res.message);
+          this.closeDialog();
+        })
+        .catch((res) => {
+          this.errorTip(res.message);
+        });
+    },
   },
 };
 </script>
@@ -400,5 +485,8 @@ export default {
   justify-content: space-between;
   font-size: 14px;
   padding-right: 8px;
+}
+.el-transfer-panel {
+  width: 360px;
 }
 </style>

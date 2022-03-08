@@ -11,6 +11,8 @@ export default {
   apiEdit: (data) => Axios("/api-path/edit", data), // 编辑API接口
   apiDel: (data) => Axios("/api-path/del", data), // 删除API接口
   apiView: (data) => Axios("/api-path/view", data), // API接口详情
+  apiAllForTransfer: (data) => Axios("/api-path/all-for-transfer", data), // 所有API接口，为菜单分配api提供
+
   // 菜单路径
   menuTypeMap: (data) => Axios("/menu-path/type-map", data), // 菜单类型映射关系
   menuTreeMap: (data) => Axios("/menu-path/tree-map", data), // 菜单树映射关系
@@ -20,6 +22,8 @@ export default {
   menuDel: (data) => Axios("/menu-path/del", data), // 删除菜单路径
   menuView: (data) => Axios("/menu-path/view", data), // 菜单路径详情
   assignApiPath: (data) => Axios("/menu-path/assign-api-path", data), // 菜单分配接口
+  getAssignedApiPath: (data) => Axios("/menu-path/get-assigned-api-path", data), // 获取菜单已分配的api-codes
+
   // 角色
   roleList: (data) => Axios("/role/list", data), // 查询角色列表
   roleAdd: (data) => Axios("/role/add", data), // 添加角色
