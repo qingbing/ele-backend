@@ -104,7 +104,6 @@ export default {
       field: "operate",
       label: "操作",
       default: "",
-      width: "260",
       fixed: "right",
       align: "left",
       component: "operate",
