@@ -62,36 +62,34 @@
       </div>
     </el-dialog>
     <!-- dialog for tree -->
-    <!-- <el-dialog
+    <el-dialog
       width="960px"
-      :close-on-click-modal="transferDialog.modalClose"
-      :title="transferDialog.title"
-      :visible.sync="transferDialog.visible"
+      :close-on-click-modal="treeDialog.modalClose"
+      :title="treeDialog.title"
+      :visible.sync="treeDialog.visible"
       append-to-body
     >
-      <el-form
-        width="960px"
-        :model="transferDialog.entity"
-        :ref="transferDialog.formRef"
-      >
-        <el-transfer
-          v-model="transferDialog.codes"
-          filterable
-          :data="transferDialog.list"
-          :filter-method="handleFilterNode"
-          :filter-placeholder="transferDialog.placeholder"
+      <el-form :model="treeDialog.entity" :ref="treeDialog.formRef">
+        <el-tree
+          show-checkbox
+          :ref="treeDialog.ref"
+          :expand-on-click-node="false"
+          :props="treeDialog.props"
+          :node-key="treeDialog.props.nodeKey"
+          :data="treeDialog.treeData"
+          :default-checked-keys="treeDialog.selectMenuCodes"
         >
-        </el-transfer>
+        </el-tree>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <c-buttons
-          :refForm="transferDialog.formRef"
-          :buttons="transferDialog.buttons"
-          :submitCallback="transferDialog.handleSubmit"
+          :refForm="treeDialog.formRef"
+          :buttons="treeDialog.buttons"
+          :submitCallback="treeDialog.handleSubmit"
           :cancelCallback="handleCancel"
         ></c-buttons>
       </span>
-    </el-dialog> -->
+    </el-dialog>
   </div>
 </template>
 
@@ -100,6 +98,7 @@ import { merge, copy } from "@qingbing/helper";
 import EBase from "@/extends/base.vue";
 import Helper from "@/utils/helper";
 import Cache from "@/utils/cache";
+import { parseRealData } from "@/utils/response";
 import JsonOption from "./../json/permission-role";
 import { getHeaderOptions, getFormOptions } from "@/api/configure/public";
 import ReqPermission from "@/api/portal/permission";
@@ -111,6 +110,9 @@ export default {
     CQueryForm: () => import("@/components/queryForm"),
     CButtons: () => import("@/components/formButton"),
     operate: () => import("@/components/operate"),
+  },
+  created() {
+    this.loanData();
   },
   data() {
     return {
@@ -184,9 +186,37 @@ export default {
           // 默认的操作实体，为新增时复制使用
         },
       },
+      treeDialog: {
+        ref: "menuTree",
+        entity: {}, // 菜单实体，需要每次打开时重新赋值
+        treeData: {}, // 树形数据
+        selectMenuCodes: [],
+        props: {
+          // 树形参数传递
+          children: "children",
+          label: "name",
+          nodeKey: "code",
+        },
+        modalClose: false,
+        formRef: "transfer-dialog-form",
+        title: "",
+        visible: false,
+        buttons: ["submit", "cancel"], // 默认展示按钮
+        handleSubmit: this.handleAssignMenu,
+      },
     };
   },
   methods: {
+    // 加载数据
+    async loanData() {
+      // 准备树形菜单数据
+      const resTree = await ReqPermission.menuTree({
+        type: "menu",
+        containButton: 1,
+        onlyEnable: 0,
+      });
+      this.treeDialog.treeData = parseRealData(resTree);
+    },
     // 页面查询按钮
     buttonQuery() {
       this.reloadTable();
@@ -260,7 +290,20 @@ export default {
     },
     // table-list 分配菜单权限按钮
     buttonAssignMenu(entity) {
-      console.log("buttonAssignMenu ====> ", entity);
+      this.treeDialog.entity.code = entity.code;
+      this.treeDialog.title = `角色(${entity.name})分配菜单`;
+      // 打开时需要重新获取当前菜单拥有的菜单权限codes
+      ReqPermission.getAssignedMenu({
+        code: entity.code,
+      })
+        .then((res) => {
+          // 显示弹出
+          this.openDialog(this.treeDialog);
+          this.$nextTick(() => {
+            this.$refs[this.treeDialog.ref].setCheckedKeys(res.data);
+          });
+        })
+        .catch((err) => console.log(err));
     },
     /**
      * handle
@@ -299,7 +342,20 @@ export default {
         })
         .catch((res) => failureCb(res));
     },
+    // 为角色分配菜单
+    handleAssignMenu(successCb, failureCb) {
+      ReqPermission.assignMenu({
+        code: this.treeDialog.entity.code,
+        menu_codes: this.$refs[this.treeDialog.ref].getCheckedKeys(),
+      })
+        .then((res) => {
+          successCb(res.message);
+          this.closeDialog();
+        })
+        .catch((res) => {
+          failureCb(res.message);
+        });
+    },
   },
 };
 </script>
-

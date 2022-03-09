@@ -16,9 +16,9 @@
       >
         <el-tree
           default-expand-all
+          :props="props"
           :node-key="props.nodeKey"
           :data="data.data"
-          :props="props"
           :expand-on-click-node="false"
           :ref="data.type"
         >
@@ -96,11 +96,7 @@
       :visible.sync="transferDialog.visible"
       append-to-body
     >
-      <el-form
-        width="960px"
-        :model="transferDialog.entity"
-        :ref="transferDialog.formRef"
-      >
+      <el-form :model="transferDialog.entity" :ref="transferDialog.formRef">
         <el-transfer
           v-model="transferDialog.codes"
           filterable
@@ -306,7 +302,7 @@ export default {
         const resTree = await ReqPermission.menuTree({
           type,
           containButton: 1,
-          onlyDisable: 0,
+          onlyEnable: 0,
         });
         this.treeData[type] = {
           type,
@@ -458,17 +454,17 @@ export default {
       return item.label.indexOf(query) > -1;
     },
     // transfer 确定保存处理
-    handleAssignApi() {
+    handleAssignApi(successCb, failureCb) {
       ReqPermission.assignApiPath({
         code: this.transferDialog.entity.code,
         api_codes: this.transferDialog.codes,
       })
         .then((res) => {
-          this.successTip(res.message);
+          successCb(res.message);
           this.closeDialog();
         })
         .catch((res) => {
-          this.errorTip(res.message);
+          failureCb(res.message);
         });
     },
   },

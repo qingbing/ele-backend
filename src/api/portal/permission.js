@@ -21,8 +21,8 @@ export default {
   menuEdit: (data) => Axios("/menu-path/edit", data), // 编辑菜单路径
   menuDel: (data) => Axios("/menu-path/del", data), // 删除菜单路径
   menuView: (data) => Axios("/menu-path/view", data), // 菜单路径详情
-  assignApiPath: (data) => Axios("/menu-path/assign-api-path", data), // 菜单分配接口
   getAssignedApiPath: (data) => Axios("/menu-path/get-assigned-api-path", data), // 获取菜单已分配的api-codes
+  assignApiPath: (data) => Axios("/menu-path/assign-api-path", data), // 菜单分配接口
 
   // 角色
   roleList: (data) => Axios("/role/list", data), // 查询角色列表
@@ -30,5 +30,6 @@ export default {
   roleEdit: (data) => Axios("/role/edit", data), // 编辑角色
   roleDel: (data) => Axios("/role/del", data), // 删除角色
   roleView: (data) => Axios("/role/view", data), // 角色详情
+  getAssignedMenu: (data) => Axios("/role/get-assigned-menu", data), // 获取角色已分配的menu-codes
   assignMenu: (data) => Axios("/role/assign-menu", data), // 菜单分配接口
 };
