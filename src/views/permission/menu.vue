@@ -324,6 +324,7 @@ export default {
     },
     // 获取当前tab标签下的可选菜单类型选项
     getMenuTypeOptions() {
+      this.defaultEntity.type = this.activeTabName;
       return {
         [this.activeTabName]: this.treeData[this.activeTabName].label,
         button: "按钮",

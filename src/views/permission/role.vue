@@ -71,6 +71,7 @@
     >
       <el-form :model="treeDialog.entity" :ref="treeDialog.formRef">
         <el-tree
+          default-expand-all
           show-checkbox
           :ref="treeDialog.ref"
           :expand-on-click-node="false"
